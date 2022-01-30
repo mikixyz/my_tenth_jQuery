@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>api test</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="wrap">
+        <div class="container">
+            <div class="header">
+                <p class="header__title">Search Books!</p>
+            </div>
+            <div class="search">
+                <div class="search__text">
+                    <input type="text" id="js-search-word" class="search__text__input" value="" placeholder="検索する">
+                </div>
+                <button id="js-search-button" class="search__btn">検索する</button>
+            </div>
+            <ul class="lists">
+                
+            </ul>
+        </div>
+    </div>
+    <script src="js/jquery.js"></script>
+    <script type="text/javascript">
+    // 楽天ブックスの総合検索APIを使って製作してください。
+    // answerの挙動を良く見てね！
+    $(function(){
+        $('#js-search-button').on('click',function(){
+            var keyword = $('#js-search-word').val()
+
+            $.ajax({
+                url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404?',
+                type: 'GET',
+                datatype: 'json',
+                data: {
+                    applicationId: '1073174208815248229', 
+                    booksGenreId: '001',
+                    keyword: keyword,
+                    hits: '20',
+                }
+            }).done(function(data){
+                if (data.count > 0){
+                    // $("ul").empty();
+                    $("ul").html('');
+                    $.each(data.Items,function(i,item){
+                    var list = $("<li class='lists__item'>" +
+                        "<div class='lists__item__inner'>" +
+                        "<a href='" + item.Item.itemUrl + 
+                        "'class='lists__item__link' target='_blank'>" + 
+                        "<img src='" + item.Item.largeImageUrl +
+                        "' class='lists__item__img' alt>" +
+                        "<p class='lists__item__detail'>作品名： " + 
+                        item.Item.title + '</p>' +
+                        "<p class='lists__item__detail'>作者 ： " + 
+                        item.Item.author + '</p>' +
+                        "<p class='lists__item__detail'>出版社： " +
+                        item.Item.publisherName + '</p>' + '</a>' +
+                        '</div>' + '</li>');
+                        $('ul').append(list);
+                    })
+                } else if (data.count === 0) {
+                    $('.lists').before('<div class="coment"></div>')
+                    coment = $('.coment');
+                    coment.html('<p class="message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
+                }
+            });
+        });
+    });
+
+
+    </script>
+</body>
+</html>
