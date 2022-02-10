@@ -30,8 +30,10 @@
     // 楽天ブックスの総合検索APIを使って製作してください。
     // answerの挙動を良く見てね！
     $(function(){
+
         $('#js-search-button').on('click',function(){
-            var keyword = $('#js-search-word').val()
+            var $word = $('#js-search-word');
+            var keyword = $word.val();
 
             $.ajax({
                 url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404?',
@@ -45,22 +47,21 @@
                 }
             }).done(function(data){
                 if (data.count > 0){
-                    // $("ul").empty();
-                    $("ul").html('');
-                    $.each(data.Items,function(i,item){
+                    $('ul').empty();
+                    $.each(data.Items,function(index,item){
                     var list = $("<li class='lists__item'>" +
-                        "<div class='lists__item__inner'>" +
-                        "<a href='" + item.Item.itemUrl + 
-                        "'class='lists__item__link' target='_blank'>" + 
-                        "<img src='" + item.Item.largeImageUrl +
-                        "' class='lists__item__img' alt>" +
-                        "<p class='lists__item__detail'>作品名： " + 
-                        item.Item.title + '</p>' +
-                        "<p class='lists__item__detail'>作者 ： " + 
-                        item.Item.author + '</p>' +
-                        "<p class='lists__item__detail'>出版社： " +
-                        item.Item.publisherName + '</p>' + '</a>' +
-                        '</div>' + '</li>');
+                                "<div class='lists__item__inner'>" +
+                                "<a href='" + item.Item.itemUrl + 
+                                "'class='lists__item__link' target='_blank'>" + 
+                                "<img src='" + item.Item.largeImageUrl +
+                                "' class='lists__item__img' alt>" +
+                                "<p class='lists__item__detail'>作品名： " + 
+                                item.Item.title + '</p>' +
+                                "<p class='lists__item__detail'>作者 ： " + 
+                                item.Item.author + '</p>' +
+                                "<p class='lists__item__detail'>出版社： " +
+                                item.Item.publisherName + '</p>' + '</a>' +
+                                '</div>' + '</li>');
                         $('ul').append(list);
                     })
                 } else if (data.count === 0) {
