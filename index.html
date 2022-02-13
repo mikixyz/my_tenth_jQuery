@@ -29,11 +29,19 @@
     <script type="text/javascript">
     // 楽天ブックスの総合検索APIを使って製作してください。
     // answerの挙動を良く見てね！
+
     $(function(){
+        var prevKeyword = "",
+            pageNo = 1;
 
         $('#js-search-button').on('click',function(){
-            var $word = $('#js-search-word');
-            var keyword = $word.val();
+            var keyword = $('#js-search-word').val();
+            if (prevKeyword === keyword) {
+                pageNo += 1;
+            }else{
+                $('ul').empty();
+                pageNo = 1;
+            }
 
             $.ajax({
                 url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404?',
@@ -44,10 +52,10 @@
                     booksGenreId: '001',
                     keyword: keyword,
                     hits: '20',
+                    page: pageNo,
                 }
             }).done(function(data){
                 if (data.count > 0){
-                    $('ul').empty();
                     $.each(data.Items,function(index,item){
                     var list = $("<li class='lists__item'>" +
                                 "<div class='lists__item__inner'>" +
@@ -62,8 +70,9 @@
                                 "<p class='lists__item__detail'>出版社： " +
                                 item.Item.publisherName + '</p>' + '</a>' +
                                 '</div>' + '</li>');
-                        $('ul').append(list);
+                        $('ul').prepend(list);
                     })
+                    prevKeyword = keyword;
                 } else if (data.count === 0) {
                     $('.lists').before('<div class="coment"></div>')
                     coment = $('.coment');
