@@ -33,7 +33,7 @@
     $(function(){
         var prevKeyword = "",
             pageNo = 1;
-
+        
         $('#js-search-button').on('click',function(){
             var keyword = $('#js-search-word').val();
             if (prevKeyword === keyword) {
@@ -55,26 +55,27 @@
                     page: pageNo,
                 }
             }).done(function(data){
+                $('#comment').remove();
                 if (data.count > 0){
                     $.each(data.Items,function(index,item){
-                    var list = $("<li class='lists__item'>" +
-                                "<div class='lists__item__inner'>" +
-                                "<a href='" + item.Item.itemUrl + 
-                                "'class='lists__item__link' target='_blank'>" + 
-                                "<img src='" + item.Item.largeImageUrl +
-                                "' class='lists__item__img' alt>" +
-                                "<p class='lists__item__detail'>作品名： " + 
-                                item.Item.title + '</p>' +
-                                "<p class='lists__item__detail'>作者 ： " + 
-                                item.Item.author + '</p>' +
-                                "<p class='lists__item__detail'>出版社： " +
-                                item.Item.publisherName + '</p>' + '</a>' +
-                                '</div>' + '</li>');
+                        var list = $("<li class='lists__item'>" +
+                                    "<div class='lists__item__inner'>" +
+                                    "<a href='" + item.Item.itemUrl + 
+                                    "'class='lists__item__link' target='_blank'>" + 
+                                    "<img src='" + item.Item.largeImageUrl +
+                                    "' class='lists__item__img' alt>" +
+                                    "<p class='lists__item__detail'>作品名： " + 
+                                    item.Item.title + '</p>' +
+                                    "<p class='lists__item__detail'>作者 ： " + 
+                                    item.Item.author + '</p>' +
+                                    "<p class='lists__item__detail'>出版社： " +
+                                    item.Item.publisherName + '</p>' + '</a>' +
+                                    '</div>' + '</li>');
                         $('ul').prepend(list);
-                    })
-                    prevKeyword = keyword;
+                    }) 
+                    prevKeyword = keyword;  
                 } else if (data.count === 0) {
-                    $('.lists').before('<div class="coment"></div>')
+                    $('.lists').before('<div class="coment" id="comment"></div>')
                     coment = $('.coment');
                     coment.html('<p class="message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
                 }
